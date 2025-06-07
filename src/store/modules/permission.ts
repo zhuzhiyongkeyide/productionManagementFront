@@ -15,7 +15,7 @@ import { PermissionModeEnum } from '/@/enums/appEnum';
 
 import { asyncRoutes } from '/@/router/routes';
 import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
-import { staticRoutesList } from '../../router/routes/staticRouter';
+import { staticRoutesList } from '@/router/routes/staticRouter';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
@@ -128,7 +128,7 @@ export const usePermissionStore = defineStore({
       const codeList = systemPermission.codeList;
       this.setPermCodeList(codeList);
       this.setAuthData(systemPermission);
-      
+
       //菜单路由
       const routeList = systemPermission.menu;
       return routeList;
