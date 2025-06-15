@@ -29,11 +29,11 @@ export function useMethods() {
       return;
     }
     //update-begin---author:wangshuai---date:2024-04-18---for: 导出excel失败提示，不进行导出---
-    let reader = new FileReader()
-    reader.readAsText(data, 'utf-8')
+    const reader = new FileReader();
+    reader.readAsText(data, 'utf-8');
     reader.onload = async () => {
       if(reader.result){
-        if(reader.result.toString().indexOf("success") !=-1){
+        if(reader.result.toString().indexOf('success') !== -1){
           // update-begin---author:liaozhiyang---date:2025-02-11---for:【issues/7738】文件中带"success"导出报错 ---
           try {
             const { success, message } = JSON.parse(reader.result.toString());
@@ -64,11 +64,10 @@ export function useMethods() {
     const isReturn = (fileInfo) => {
       try {
         if (fileInfo.code === 201) {
-          let {
-            message,
+          const {
             result: { msg, fileUrl, fileName },
           } = fileInfo;
-          let href = glob.uploadUrl + fileUrl;
+          const href = glob.uploadUrl + fileUrl;
           createWarningModal({
             title: message,
             centered: false,
@@ -90,6 +89,11 @@ export function useMethods() {
         typeof success === 'function' ? success(fileInfo) : '';
       }
     };
+    // 确保 URL 是相对路径，不要直接使用后端地址
+    if (url.indexOf('http://') === 0 || url.indexOf('https://') === 0) {
+      console.warn('导入 Excel 的 URL 不应该是绝对路径，可能会导致跨域问题');
+    }
+    // 使用 defHttp 上传文件，确保走统一的 axios 配置
     await defHttp.uploadFile({ url }, { file: data.file }, { success: isReturn });
   }
 
@@ -109,7 +113,7 @@ export function useMethods() {
     if (!name || typeof name != 'string') {
       name = '导出文件';
     }
-    let blobOptions = { type: 'application/vnd.ms-excel' };
+    const blobOptions = { type: 'application/vnd.ms-excel' };
     let fileSuffix = '.xls';
     if (isXlsx) {
       blobOptions['type'] = XLSX_MIME_TYPE;
@@ -118,8 +122,8 @@ export function useMethods() {
     if (typeof window.navigator.msSaveBlob !== 'undefined') {
       window.navigator.msSaveBlob(new Blob([data], blobOptions), name + fileSuffix);
     } else {
-      let url = window.URL.createObjectURL(new Blob([data], blobOptions));
-      let link = document.createElement('a');
+      const url = window.URL.createObjectURL(new Blob([data], blobOptions));
+      const link = document.createElement('a');
       link.style.display = 'none';
       link.href = url;
       link.setAttribute('download', name + fileSuffix);
